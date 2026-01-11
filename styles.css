@@ -24,9 +24,12 @@ header {
     margin: 0 auto;
 }
 
-.logo {
+.logo-section {
     float: left;
-    width: 60px;
+}
+
+.logo {
+    width: 80px;
     height: auto;
     margin-right: 20px;
     background-color: white;
@@ -34,11 +37,11 @@ header {
     border-radius: 5px;
 }
 
-.header-text {
+.title-section {
     overflow: hidden;
 }
 
-.header-text h1 {
+.title-section h1 {
     font-size: 28px;
     margin-bottom: 5px;
 }
@@ -57,10 +60,11 @@ main {
 .department-section {
     background: white;
     margin-bottom: 20px;
+    padding: 20px;
     border: 1px solid #ddd;
 }
 
-.department-header {
+.department-name {
     background-color: #2c5aa0;
     color: white;
     padding: 15px;
@@ -72,18 +76,15 @@ main {
     padding: 15px;
 }
 
-.employee-list li {
+.employee-item {
     padding: 10px;
     border-bottom: 1px solid #eee;
-}
-
-.employee-list li:last-child {
-    border-bottom: none;
-}
-
-.employee-name {
     font-size: 16px;
     color: #333;
+}
+
+.employee-item:last-child {
+    border-bottom: none;
 }
 
 /* Footer Styles */
