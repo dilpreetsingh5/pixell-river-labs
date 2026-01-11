@@ -1,0 +1,101 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f5f5f5;
+}
+
+/* Header Styles */
+header {
+    background-color: #2c5aa0;
+    color: white;
+    padding: 20px;
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo {
+    float: left;
+    width: 60px;
+    height: auto;
+    margin-right: 20px;
+    background-color: white;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.header-text {
+    overflow: hidden;
+}
+
+.header-text h1 {
+    font-size: 28px;
+    margin-bottom: 5px;
+}
+
+.greeting {
+    font-size: 14px;
+}
+
+/* Main Content Styles */
+main {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+
+.department-section {
+    background: white;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+}
+
+.department-header {
+    background-color: #2c5aa0;
+    color: white;
+    padding: 15px;
+    font-size: 20px;
+}
+
+.employee-list {
+    list-style: none;
+    padding: 15px;
+}
+
+.employee-list li {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.employee-list li:last-child {
+    border-bottom: none;
+}
+
+.employee-name {
+    font-size: 16px;
+    color: #333;
+}
+
+/* Footer Styles */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+    clear: both;
+}
+
+footer p {
+    font-size: 14px;
+}
