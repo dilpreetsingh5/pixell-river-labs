@@ -1,4 +1,4 @@
-import type { Employee } from './Employees.ts';
+import type { Employee } from './Employees';
 
 export interface Department {
     name: string;
