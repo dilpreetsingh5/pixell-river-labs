@@ -1,8 +1,8 @@
 import './App.css';
-import Header from './Components/Header/Header';
-import Footer from './Components/Footer/Footer';
-import Department from './Components/Department/Department';
-import { departments } from './data/departments';
+import Header from './Components/Header/Header.tsx';
+import Footer from './Components/Footer/Footer.tsx';
+import Department from './Components/Department/Department.tsx';
+import { departments } from './data/departments.ts';
 
 // Main App component
 function App() {

@@ -1,5 +1,5 @@
 import './Department.css';
-import type { Department as DepartmentType } from '../../Types/Department';
+import type { Department as DepartmentType } from '../../Types/Department.ts';
 
 interface DepartmentProps {
     department: DepartmentType;
