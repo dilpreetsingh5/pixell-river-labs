@@ -1,0 +1,30 @@
+.department-section {
+    background: white;
+    margin-bottom: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+}
+
+.department-name {
+    background-color: #2c5aa0;
+    color: white;
+    padding: 15px;
+    font-size: 20px;
+    margin: -20px -20px 0 -20px;
+}
+
+.employee-list {
+    list-style: none;
+    padding: 15px 0 0 0;
+}
+
+.employee-item {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    font-size: 16px;
+    color: #333;
+}
+
+.employee-item:last-child {
+    border-bottom: none;
+}
