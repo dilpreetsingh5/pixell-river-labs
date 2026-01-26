@@ -1,4 +1,4 @@
-import type { Department } from '../Types/Department.ts';
+import type { Department } from '../types/Department.ts';
 
 export const departments: Department[] = [
     {
