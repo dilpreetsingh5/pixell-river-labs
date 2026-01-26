@@ -3,6 +3,7 @@ import type { Department } from '../../types/Department';
 import * as React from "react";
 import './EmployeeForm.css';
 
+// Function to add employee, passed from parent
 interface Props {
     departments: Department[];
     onAddEmployee: (
@@ -18,6 +19,7 @@ function EmployeeForm({ departments, onAddEmployee }: Props) {
     const [department, setDepartment] = useState('');
     const [error, setError] = useState('');
 
+    // Handle form submission
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
