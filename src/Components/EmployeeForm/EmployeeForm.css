@@ -1,0 +1,38 @@
+.employee-form {
+    max-width: 700px;
+    margin: 40px auto;   /* centers the form */
+    padding: 20px;
+    border-top: 1px solid #ccc;
+}
+
+.employee-form h2 {
+    margin-bottom: 16px;
+}
+
+.employee-form form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-end;
+}
+
+.employee-form label {
+    display: flex;
+    flex-direction: column;
+    font-weight: 500;
+}
+
+.employee-form input,
+.employee-form select {
+    padding: 6px;
+    min-width: 180px;
+}
+
+.employee-form button {
+    padding: 8px 16px;
+}
+
+.error {
+    color: red;
+    margin-bottom: 10px;
+}
