@@ -1,13 +1,17 @@
 import { useState } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
+
 import Header from './Components/Header/Header';
 import Footer from './Components/Footer/Footer';
-import Department from './Components/Department/Department';
-import EmployeeForm from './Components/EmployeeForm/EmployeeForm';
+import Navbar from './Components/Navbar/Navbar';
+
+import EmployeesPage from './pages/EmployeesPage';
+import OrganizationPage from './pages/OrganizationPage';
+
 import { departments as initialDepartments } from './data/departments';
 import type { Department as DepartmentType } from './types/Department';
 
-// Main App component
 function App() {
     const [departments, setDepartments] = useState<DepartmentType[]>(initialDepartments);
 
@@ -16,8 +20,8 @@ function App() {
         lastName: string,
         departmentName: string
     ) => {
-        setDepartments(prevDepartments =>
-            prevDepartments.map(dept =>
+        setDepartments(prev =>
+            prev.map(dept =>
                 dept.name === departmentName
                     ? {
                         ...dept,
@@ -31,22 +35,26 @@ function App() {
         );
     };
     return (
-        <>
+        <BrowserRouter>
             <Header />
-            <main>
-                {departments.map((department, index) => (
-                    <Department key={index} department={department} />
-                ))}
-            </main>
+            <Navbar />
 
-            {/* Form at the bottom */}
-            <EmployeeForm
-                departments={departments}
-                onAddEmployee={handleAddEmployee}
-            />
-            
+            <Routes>
+                <Route
+                    path="/employees"
+                    element={
+                        <EmployeesPage
+                            departments={departments}
+                            onAddEmployee={handleAddEmployee}
+                        />
+                    }
+                />
+                <Route path="/organization" element={<OrganizationPage />} />
+                <Route path="*" element={<Navigate to="/employees" />} />
+            </Routes>
+
             <Footer />
-        </>
+        </BrowserRouter>
     );
 }
 
