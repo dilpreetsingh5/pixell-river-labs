@@ -1,0 +1,54 @@
+.organization {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 0 16px;
+}
+
+.organization h2 {
+    margin-bottom: 16px;
+}
+
+/* HEADER ONLY */
+.organization-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 12px 0;
+    font-weight: 600;
+    background-color: #2c5aa0;
+    border-bottom: 2px solid #2c5aa0;
+}
+
+/* Header spacing */
+.organization-header .name {
+    padding-left: 16px;
+}
+
+.organization-header .role {
+    padding-left: 24px;
+}
+
+
+.role-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.role-item {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 14px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.role-title {
+    padding-left: 24px;
+    font-weight: 600;
+    color: #333;
+    border-left: 3px solid #4c70a7;
+}
+
+.organization-header span {
+    color: #ffffff;
+}
+
