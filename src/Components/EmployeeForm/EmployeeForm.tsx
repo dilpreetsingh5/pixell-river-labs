@@ -1,89 +1,103 @@
 import { useState } from 'react';
-import type { Department } from '../../types/Department';
-import * as React from "react";
+import * as React from 'react';
+import { useFormInput } from '../../hooks/userFormInput';
+import { employeeService} from '../../services/employeeService';
 import './EmployeeForm.css';
 
-// Function to add employee, passed from parent
 interface Props {
-    departments: Department[];
-    onAddEmployee: (
-        firstName: string,
-        lastName: string,
-        departmentName: string
-    ) => void;
+    departments: string[];
+    onEmployeeCreated: () => void;
 }
 
-function EmployeeForm({ departments, onAddEmployee }: Props) {
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [department, setDepartment] = useState('');
-    const [error, setError] = useState('');
+function EmployeeForm({ departments, onEmployeeCreated }: Props) {
+    const firstNameInput = useFormInput('');
+    const lastNameInput = useFormInput('');
+    const departmentInput = useFormInput('');
+    const [formError, setFormError] = useState('');
 
-    // Handle form submission
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        setError('');
+    const handleSubmit = (event: React.FormEvent) => {
+        event.preventDefault();
+        setFormError('');
 
-        if (firstName.trim().length < 3) {
-            setError('First name must be at least 3 characters.');
+        const firstNameIsValid = firstNameInput.validate(value => {
+            if (value.trim().length < 3) {
+                return 'First name must be at least 3 characters.';
+            }
+            return '';
+        });
+
+        if (!firstNameIsValid) {
             return;
         }
 
-        if (!department) {
-            setError('Please select a department.');
+        const result = employeeService.createEmployee({
+            firstName: firstNameInput.value,
+            lastName: lastNameInput.value,
+            departmentName: departmentInput.value
+        });
+
+        if (!result.success) {
+            if (result.errors?.department) {
+                departmentInput.setError(result.errors.department);
+            }
+            if (result.errors?.firstName) {
+                firstNameInput.setError(result.errors.firstName);
+            }
+            if (!result.errors?.department && !result.errors?.firstName) {
+                setFormError('Could not create employee.');
+            }
             return;
         }
 
-        onAddEmployee(firstName, lastName, department);
-
-        // Clear form after success
-        setFirstName('');
-        setLastName('');
-        setDepartment('');
+        firstNameInput.reset();
+        lastNameInput.reset();
+        departmentInput.reset();
+        onEmployeeCreated();
     };
 
     return (
         <section className="employee-form">
             <h2>Add New Employee</h2>
 
-            {error && <p className="error">{error}</p>}
+            {formError && <p className="error">{formError}</p>}
 
             <form onSubmit={handleSubmit}>
                 <label htmlFor="firstName">First Name:</label>
                 <input
                     type="text"
                     id="firstName"
-                    value={firstName}
-                    onChange={e => setFirstName(e.target.value)}
+                    value={firstNameInput.value}
+                    onChange={firstNameInput.handleChange}
                 />
+                {firstNameInput.error && <p className="error">{firstNameInput.error}</p>}
 
                 <label htmlFor="lastName">Last Name (optional):</label>
                 <input
                     type="text"
                     id="lastName"
-                    value={lastName}
-                    onChange={e => setLastName(e.target.value)}
+                    value={lastNameInput.value}
+                    onChange={lastNameInput.handleChange}
                 />
 
                 <label htmlFor="department">Department:</label>
                 <select
                     id="department"
-                    value={department}
-                    onChange={e => setDepartment(e.target.value)}
+                    value={departmentInput.value}
+                    onChange={departmentInput.handleChange}
                 >
                     <option value="">Select Department</option>
-                    {departments.map(dept => (
-                        <option key={dept.name} value={dept.name}>
-                            {dept.name}
+                    {departments.map(department => (
+                        <option key={department} value={department}>
+                            {department}
                         </option>
                     ))}
                 </select>
+                {departmentInput.error && <p className="error">{departmentInput.error}</p>}
 
                 <button type="submit">Add Employee</button>
             </form>
         </section>
     );
-
 }
 
 export default EmployeeForm;

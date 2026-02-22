@@ -1,29 +1,31 @@
 import Department from '../Components/Department/Department';
 import EmployeeForm from '../Components/EmployeeForm/EmployeeForm';
 import type { Department as DepartmentType } from '../types/Department';
+import type { Employee } from '../types/Employees';
 
 interface Props {
-    departments: DepartmentType[];
-    onAddEmployee: (
-        firstName: string,
-        lastName: string,
-        departmentName: string
-    ) => void;
+    departments: string[];
+    employees: Employee[];
+    onEmployeeCreated: 
+    () => void;
 }
 
-function EmployeesPage({ departments, onAddEmployee }: Props) {
+function EmployeesPage({ departments, employees, onEmployeeCreated }: Props) {
+    const departmentObjects: DepartmentType[] = departments.map(deptName => ({
+        name: deptName,
+        employees: employees
+            .filter(emp => emp.departmentName === deptName)
+            .map(emp => ({ firstName: emp.firstName, lastName: emp.lastName }))
+    }));
     return (
         <>
             <main>
-                {departments.map((department, index) => (
+                {departmentObjects.map((department, index) => (
                     <Department key={index} department={department} />
                 ))}
             </main>
 
-            <EmployeeForm
-                departments={departments}
-                onAddEmployee={onAddEmployee}
-            />
+            <EmployeeForm departments={departments} onEmployeeCreated={onEmployeeCreated} />
         </>
     );
 }
