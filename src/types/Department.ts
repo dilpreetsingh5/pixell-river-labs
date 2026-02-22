@@ -1,6 +1,9 @@
-import type { Employee } from './Employees';
+export interface DepartmentEmployee {
+    firstName: string;
+    lastName: string;
+}
 
 export interface Department {
     name: string;
-    employees: Employee[];
+    employees: DepartmentEmployee[];
 }
