@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect,useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
 
@@ -9,31 +9,22 @@ import Navbar from './Components/Navbar/Navbar';
 import EmployeesPage from './pages/EmployeesPage';
 import OrganizationPage from './pages/OrganizationPage';
 
-import { departments as initialDepartments } from './data/departments';
-import type { Department as DepartmentType } from './types/Department';
+import { employeeRepo } from './repositories/employeeRepo';
+import type { Employee } from './types/Employees';
 
 function App() {
-    const [departments, setDepartments] = useState<DepartmentType[]>(initialDepartments);
+    const [departments, setDepartments] = useState<string[]>([]);
+    const [employees, setEmployees] = useState<Employee[]>([]);
 
-    const handleAddEmployee = (
-        firstName: string,
-        lastName: string,
-        departmentName: string
-    ) => {
-        setDepartments(prev =>
-            prev.map(dept =>
-                dept.name === departmentName
-                    ? {
-                        ...dept,
-                        employees: [
-                            ...dept.employees,
-                            { firstName, lastName }
-                        ]
-                    }
-                    : dept
-            )
-        );
+    useEffect(() => {
+        setDepartments(employeeRepo.getDepartments());
+        setEmployees(employeeRepo.getEmployees());
+    }, []);
+
+    const refreshEmployees = () => {
+        setEmployees(employeeRepo.getEmployees());
     };
+
     return (
         <BrowserRouter>
             <Header />
@@ -45,11 +36,15 @@ function App() {
                     element={
                         <EmployeesPage
                             departments={departments}
-                            onAddEmployee={handleAddEmployee}
+                            employees={employees}
+                            onEmployeeCreated={refreshEmployees}
                         />
                     }
                 />
-                <Route path="/organization" element={<OrganizationPage />} />
+                <Route 
+                    path="/organization" 
+                    element={<OrganizationPage />} 
+                />
                 <Route path="*" element={<Navigate to="/employees" />} />
             </Routes>
 
