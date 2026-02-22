@@ -1,35 +1,63 @@
+import { employeeRepo } from '../repositories/employeeRepo';
 import type { CreateEmployeeInput, Employee } from '../types/Employees';
-import { departments as seedDepartments } from '../data/departments';
 
-const departmentStore: string[] = seedDepartments.map(department => department.name);
-let employeeStore: Employee[] = seedDepartments.flatMap(department =>
-    department.employees.map(employee => ({
-        ...employee,
-        departmentName: department.name
-    }))
-);
-
-function getDepartments() {
-    return [...departmentStore];
-}
-
-function getEmployees() {
-    return [...employeeStore];
-}
-
-function createEmployee(input: CreateEmployeeInput) {
-    const newEmployee: Employee = {
-        firstName: input.firstName,
-        lastName: input.lastName,
-        departmentName: input.departmentName
+// Result type
+interface CreateEmployeeResult {
+    success: boolean;
+    employee?: Employee;
+    errors?: {
+        firstName?: string;
+        department?: string;
     };
-
-    employeeStore = [...employeeStore, newEmployee];
-    return newEmployee;
 }
 
-export const employeeRepo = {
+function getDepartments(): string[] {
+    return employeeRepo.getDepartments();
+}
+
+function createEmployee(input: CreateEmployeeInput): CreateEmployeeResult {
+    const errors: { firstName?: string; department?: string } = {};
+
+    const firstName = input.firstName.trim();
+    const lastName = input.lastName.trim();
+    const departmentName = input.departmentName.trim();
+
+    // Check department exists
+    const departmentExists = employeeRepo
+        .getDepartments()
+        .some(dept => dept === departmentName);
+
+    if (!departmentExists) {
+        errors.department = 'Department does not exist.';
+    }
+
+    // Validate first name
+    if (firstName.length < 3) {
+        errors.firstName = 'First name must be at least 3 characters.';
+    }
+
+    // If any errors → return
+    if (errors.firstName || errors.department) {
+        return {
+            success: false,
+            errors
+        };
+    }
+
+    // Create employee
+    const employee = employeeRepo.createEmployee({
+        firstName,
+        lastName,
+        departmentName
+    });
+
+    return {
+        success: true,
+        employee
+    };
+}
+
+export const employeeService = {
     getDepartments,
-    getEmployees,
     createEmployee
 };
