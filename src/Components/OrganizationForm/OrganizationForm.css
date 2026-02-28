@@ -1,0 +1,42 @@
+.organization-form {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    background: #ffffff;
+    border-radius: 10px;
+}
+
+.organization-form h2 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+.organization-form form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.organization-form label {
+    font-weight: 600;
+}
+
+.organization-form input {
+    padding: 0.6rem;
+    border: 1px solid #cccccc;
+    border-radius: 6px;
+}
+
+.organization-form button {
+    margin-top: 0.5rem;
+    padding: 0.7rem;
+    border: none;
+    border-radius: 6px;
+    background-color: #2c7be5;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.organization-form button:hover {
+    background-color: #1f5fb8;
+}
