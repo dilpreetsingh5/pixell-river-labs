@@ -1,8 +1,19 @@
 import Organization from '../Components/Organization/Organization';
-import { organization } from '../data/Organization';
+import OrganizationForm from '../Components/OrganizationForm/OrganizationForm';
+import type { Role } from '../types/Role';
 
-function OrganizationPage() {
-    return <Organization roles={organization} />;
+interface Props {
+    roles: Role[];
+    onRoleCreated: () => void;
+}
+
+function OrganizationPage({ roles, onRoleCreated }: Props) {
+    return (
+        <>
+            <OrganizationForm onRoleCreated={onRoleCreated} />
+            <Organization roles={roles} />
+        </>
+    );
 }
 
 export default OrganizationPage;
