@@ -1,4 +1,4 @@
-import { useEffect,useState } from 'react';
+import { useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
 
@@ -10,19 +10,21 @@ import EmployeesPage from './pages/EmployeesPage';
 import OrganizationPage from './pages/OrganizationPage';
 
 import { employeeRepo } from './repositories/employeeRepo';
+import { organizationRepo } from './repositories/organizationRepo';
 import type { Employee } from './types/Employees';
+import type { Role } from './types/Role';
 
 function App() {
-    const [departments, setDepartments] = useState<string[]>([]);
-    const [employees, setEmployees] = useState<Employee[]>([]);
-
-    useEffect(() => {
-        setDepartments(employeeRepo.getDepartments());
-        setEmployees(employeeRepo.getEmployees());
-    }, []);
+    const [departments] = useState<string[]>(() => employeeRepo.getDepartments());
+    const [employees, setEmployees] = useState<Employee[]>(() => employeeRepo.getEmployees());
+    const [roles, setRoles] = useState<Role[]>(() => organizationRepo.getRoles());
 
     const refreshEmployees = () => {
         setEmployees(employeeRepo.getEmployees());
+    };
+
+    const refreshRoles = () => {
+        setRoles(organizationRepo.getRoles());
     };
 
     return (
@@ -43,7 +45,7 @@ function App() {
                 />
                 <Route 
                     path="/organization" 
-                    element={<OrganizationPage />} 
+                    element={<OrganizationPage roles={roles} onRoleCreated={refreshRoles} />} 
                 />
                 <Route path="*" element={<Navigate to="/employees" />} />
             </Routes>
