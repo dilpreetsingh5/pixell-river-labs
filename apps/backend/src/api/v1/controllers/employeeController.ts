@@ -1,17 +1,25 @@
 import type { Request, Response } from "express";
 import { employeeService } from "../services/employeeService";
 
-function getDepartments(_req: Request, res: Response): void {
-  const departments = employeeService.getDepartments();
-  res.status(200).json(departments);
+async function getDepartments(_req: Request, res: Response): Promise<void> {
+  try {
+    const departments = await employeeService.getDepartments();
+    res.status(200).json(departments);
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Failed to load departments." });
+  }
 }
 
-function getEmployees(_req: Request, res: Response): void {
-  const employees = employeeService.getEmployees();
-  res.status(200).json(employees);
+async function getEmployees(_req: Request, res: Response): Promise<void> {
+  try {
+    const employees = await employeeService.getEmployees();
+    res.status(200).json(employees);
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Failed to load employees." });
+  }
 }
 
-function createEmployee(req: Request, res: Response): void {
+async function createEmployee(req: Request, res: Response): Promise<void> {
   const { firstName, lastName, departmentName } = req.body ?? {};
 
   if (
@@ -28,11 +36,17 @@ function createEmployee(req: Request, res: Response): void {
     return;
   }
 
-  const result = employeeService.createEmployee({
-    firstName,
-    lastName,
-    departmentName
-  });
+  let result;
+  try {
+    result = await employeeService.createEmployee({
+      firstName,
+      lastName,
+      departmentName
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Failed to create employee." });
+    return;
+  }
 
   if (!result.success) {
     res.status(400).json(result);

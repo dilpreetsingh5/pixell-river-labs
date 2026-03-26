@@ -1,32 +1,55 @@
-import { departments } from "../data/departments";
 import type { CreateEmployeeInput, Employee } from "../../../../../../shared/types/Employees";
+import { prisma } from "../../../db/prisma";
 
-const departmentStore: string[] = departments.map((department) => department.name);
+async function getDepartments(): Promise<string[]> {
+  const departments = await prisma.department.findMany({
+    select: { name: true },
+    orderBy: { name: "asc" }
+  });
 
-let employeeStore: Employee[] = departments.flatMap((department) =>
-  department.employees.map((employee) => ({
-    ...employee,
-    departmentName: department.name
-  }))
-);
-
-function getDepartments(): string[] {
-  return [...departmentStore];
+  return departments.map((department) => department.name);
 }
 
-function getEmployees(): Employee[] {
-  return [...employeeStore];
+async function getEmployees(): Promise<Employee[]> {
+  const employees = await prisma.employee.findMany({
+    select: {
+      firstName: true,
+      lastName: true,
+      department: { select: { name: true } }
+    },
+    orderBy: [
+      { department: { name: "asc" } },
+      { lastName: "asc" },
+      { firstName: "asc" }
+    ]
+  });
+
+  return employees.map((employee) => ({
+    firstName: employee.firstName,
+    lastName: employee.lastName,
+    departmentName: employee.department.name
+  }));
 }
 
-function createEmployee(input: CreateEmployeeInput): Employee {
-  const newEmployee: Employee = {
-    firstName: input.firstName,
-    lastName: input.lastName,
-    departmentName: input.departmentName
+async function createEmployee(input: CreateEmployeeInput): Promise<Employee> {
+  const created = await prisma.employee.create({
+    data: {
+      firstName: input.firstName,
+      lastName: input.lastName,
+      department: { connect: { name: input.departmentName } }
+    },
+    select: {
+      firstName: true,
+      lastName: true,
+      department: { select: { name: true } }
+    }
+  });
+
+  return {
+    firstName: created.firstName,
+    lastName: created.lastName,
+    departmentName: created.department.name
   };
-
-  employeeStore = [...employeeStore, newEmployee];
-  return newEmployee;
 }
 
 export const employeeRepository = {
