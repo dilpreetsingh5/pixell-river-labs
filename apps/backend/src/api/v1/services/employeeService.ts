@@ -10,24 +10,24 @@ interface CreateEmployeeResult {
   };
 }
 
-function getDepartments(): string[] {
+async function getDepartments(): Promise<string[]> {
   return employeeRepository.getDepartments();
 }
 
-function getEmployees(): Employee[] {
+async function getEmployees(): Promise<Employee[]> {
   return employeeRepository.getEmployees();
 }
 
-function createEmployee(input: CreateEmployeeInput): CreateEmployeeResult {
+async function createEmployee(input: CreateEmployeeInput): Promise<CreateEmployeeResult> {
   const errors: { firstName?: string; department?: string } = {};
 
   const firstName = input.firstName.trim();
   const lastName = input.lastName.trim();
   const departmentName = input.departmentName.trim();
 
-  const departmentExists = employeeRepository
-    .getDepartments()
-    .some((dept) => dept === departmentName);
+  const departmentExists = (await employeeRepository.getDepartments()).some(
+    (dept) => dept === departmentName
+  );
 
   if (!departmentExists) {
     errors.department = "Department does not exist.";
@@ -41,7 +41,7 @@ function createEmployee(input: CreateEmployeeInput): CreateEmployeeResult {
     return { success: false, errors };
   }
 
-  const employee = employeeRepository.createEmployee({
+  const employee = await employeeRepository.createEmployee({
     firstName,
     lastName,
     departmentName

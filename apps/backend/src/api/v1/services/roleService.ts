@@ -10,11 +10,11 @@ interface CreateRoleResult {
   };
 }
 
-function getRoles(): Role[] {
+async function getRoles(): Promise<Role[]> {
   return roleRepository.getRoles();
 }
 
-function createRole(input: CreateRoleInput): CreateRoleResult {
+async function createRole(input: CreateRoleInput): Promise<CreateRoleResult> {
   const errors: { firstName?: string; role?: string } = {};
 
   const firstName = input.firstName.trim();
@@ -29,9 +29,9 @@ function createRole(input: CreateRoleInput): CreateRoleResult {
     errors.role = "Role is required.";
   }
 
-  const roleExists = roleRepository
-    .getRoles()
-    .some((role) => role.role.toLowerCase() === roleName.toLowerCase());
+  const roleExists = (await roleRepository.getRoles()).some(
+    (role) => role.role.toLowerCase() === roleName.toLowerCase()
+  );
 
   if (roleExists) {
     errors.role = "Role is already occupied.";
@@ -41,7 +41,7 @@ function createRole(input: CreateRoleInput): CreateRoleResult {
     return { success: false, errors };
   }
 
-  const roleRecord = roleRepository.createRole({
+  const roleRecord = await roleRepository.createRole({
     firstName,
     lastName,
     role: roleName
