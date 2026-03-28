@@ -21,3 +21,4 @@ app.use("/api/v1", employeeRouter);
 app.use("/api/v1", roleRouter);
 
 export { app };
+export default app;
