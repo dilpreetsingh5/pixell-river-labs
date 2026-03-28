@@ -2,10 +2,7 @@
   "name": "pixell-river-labs",
   "private": true,
   "version": "1.0.0",
-  "workspaces": [
-    "apps/frontend",
-    "apps/backend"
-  ],
+  "workspaces": ["apps/frontend","apps/backend"],
   "scripts": {
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
     "dev:frontend": "npm run dev --workspace apps/frontend",
@@ -14,7 +11,8 @@
     "build:backend": "npm run build --workspace apps/backend",
     "build": "npm run build:backend && npm run build:frontend",
     "start:backend": "npm run start --workspace apps/backend",
-    "install:all": "npm install --workspaces"
+    "install:all": "npm install --workspaces",
+    "vercel-build": "npm run vercel-build --workspace=apps/backend && npm run build --workspace=apps/frontend"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
