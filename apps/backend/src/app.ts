@@ -1,4 +1,3 @@
-import { clerkMiddleware } from "@clerk/express";
 import express from "express";
 import cors from "cors";
 import { employeeRouter } from "./api/v1/routes/employeeRoutes";
@@ -18,7 +17,10 @@ app.use(
   );
 
 app.use(express.json());
-app.use(clerkMiddleware());
+
+app.get("/", (_req, res) => {
+  res.status(200).json({ status: "ok", service: "pixell-river-backend" });
+});
 
 app.get("/health", (_req, res) => {
   res.status(200).json({ status: "ok" });
