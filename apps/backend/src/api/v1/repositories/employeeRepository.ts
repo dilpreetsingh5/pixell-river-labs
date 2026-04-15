@@ -1,6 +1,10 @@
 import type { CreateEmployeeInput, Employee } from "../../../../../../shared/types/Employees";
 import { prisma } from "../../../db/prisma";
 
+interface CreateEmployeeRecordInput extends CreateEmployeeInput {
+  createdByUserId?: number;
+}
+
 async function getDepartments(): Promise<string[]> {
   const departments = await prisma.department.findMany({
     select: { name: true },
@@ -31,12 +35,13 @@ async function getEmployees(): Promise<Employee[]> {
   }));
 }
 
-async function createEmployee(input: CreateEmployeeInput): Promise<Employee> {
+async function createEmployee(input: CreateEmployeeRecordInput): Promise<Employee> {
   const created = await prisma.employee.create({
     data: {
       firstName: input.firstName,
       lastName: input.lastName,
-      department: { connect: { name: input.departmentName } }
+      department: { connect: { name: input.departmentName } },
+      createdBy: input.createdByUserId ? { connect: { id: input.createdByUserId } } : undefined
     },
     select: {
       firstName: true,

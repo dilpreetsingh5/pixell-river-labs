@@ -10,11 +10,15 @@ interface CreateRoleResult {
   };
 }
 
+interface CreateRoleWithUserInput extends CreateRoleInput {
+  createdByUserId?: number;
+}
+
 async function getRoles(): Promise<Role[]> {
   return roleRepository.getRoles();
 }
 
-async function createRole(input: CreateRoleInput): Promise<CreateRoleResult> {
+async function createRole(input: CreateRoleWithUserInput): Promise<CreateRoleResult> {
   const errors: { firstName?: string; role?: string } = {};
 
   const firstName = input.firstName.trim();
@@ -44,7 +48,8 @@ async function createRole(input: CreateRoleInput): Promise<CreateRoleResult> {
   const roleRecord = await roleRepository.createRole({
     firstName,
     lastName,
-    role: roleName
+    role: roleName,
+    createdByUserId: input.createdByUserId
   });
 
   return { success: true, roleRecord };

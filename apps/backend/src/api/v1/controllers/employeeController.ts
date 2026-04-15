@@ -21,6 +21,7 @@ async function getEmployees(_req: Request, res: Response): Promise<void> {
 
 async function createEmployee(req: Request, res: Response): Promise<void> {
   const { firstName, lastName, departmentName } = req.body ?? {};
+  const dbUserId = req.dbUserId;
 
   if (
     typeof firstName !== "string" ||
@@ -41,7 +42,8 @@ async function createEmployee(req: Request, res: Response): Promise<void> {
     result = await employeeService.createEmployee({
       firstName,
       lastName,
-      departmentName
+      departmentName,
+      createdByUserId: dbUserId
     });
   } catch (error) {
     res.status(500).json({ success: false, message: "Failed to create employee." });

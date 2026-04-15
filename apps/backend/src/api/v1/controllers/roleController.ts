@@ -12,6 +12,7 @@ async function getRoles(_req: Request, res: Response): Promise<void> {
 
 async function createRole(req: Request, res: Response): Promise<void> {
   const { firstName, lastName, role } = req.body ?? {};
+  const dbUserId = req.dbUserId;
 
   if (
     typeof firstName !== "string" ||
@@ -29,7 +30,7 @@ async function createRole(req: Request, res: Response): Promise<void> {
 
   let result;
   try {
-    result = await roleService.createRole({ firstName, lastName, role });
+    result = await roleService.createRole({ firstName, lastName, role, createdByUserId: dbUserId });
   } catch (error) {
     res.status(500).json({ success: false, message: "Failed to create role." });
     return;

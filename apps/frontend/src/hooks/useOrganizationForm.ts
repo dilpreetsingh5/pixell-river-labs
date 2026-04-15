@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
+import { useAuth } from '@clerk/react';
 import { useFormInput } from './userFormInput';
 import { organizationService } from '../services/organizationService';
 
@@ -8,6 +9,7 @@ interface UseOrganizationFormOptions {
 }
 
 export function useOrganizationForm({ onRoleCreated }: UseOrganizationFormOptions) {
+    const { getToken, isSignedIn } = useAuth();
     const firstNameInput = useFormInput('');
     const lastNameInput = useFormInput('');
     const roleInput = useFormInput('');
@@ -16,6 +18,12 @@ export function useOrganizationForm({ onRoleCreated }: UseOrganizationFormOption
     async function handleSubmit(event: FormEvent) {
         event.preventDefault();
         setFormError('');
+
+        const sessionToken = await getToken();
+        if (!isSignedIn || !sessionToken) {
+            setFormError('Please log in before creating an organization role.');
+            return;
+        }
 
         const firstNameIsValid = firstNameInput.validate(value => {
             if (value.trim().length < 3) {
@@ -32,7 +40,7 @@ export function useOrganizationForm({ onRoleCreated }: UseOrganizationFormOption
             firstName: firstNameInput.value,
             lastName: lastNameInput.value,
             role: roleInput.value
-        });
+        }, sessionToken);
 
         if (!result.success) {
             if (result.errors?.firstName) {

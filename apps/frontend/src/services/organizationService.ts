@@ -14,7 +14,10 @@ async function getRoles(): Promise<Role[]> {
     return organizationRepo.getRoles();
 }
 
-async function createRole(input: CreateRoleInput): Promise<CreateRoleResult> {
+async function createRole(
+    input: CreateRoleInput,
+    sessionToken: string
+): Promise<CreateRoleResult> {
     const firstName = input.firstName.trim();
     const lastName = input.lastName.trim();
     const roleName = input.role.trim();
@@ -37,7 +40,7 @@ async function createRole(input: CreateRoleInput): Promise<CreateRoleResult> {
         firstName,
         lastName,
         role: roleName
-    });
+    }, sessionToken);
 
     return result;
 }
