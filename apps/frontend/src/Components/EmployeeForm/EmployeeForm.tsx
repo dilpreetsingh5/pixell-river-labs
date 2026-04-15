@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import * as React from 'react';
+import { useAuth } from '@clerk/react';
 import { useFormInput } from '../../hooks/userFormInput';
 import { employeeService} from '../../services/employeeService';
+import AuthPrompt from '../AuthPrompt/AuthPrompt';
 import './EmployeeForm.css';
 
 interface Props {
@@ -10,6 +12,7 @@ interface Props {
 }
 
 function EmployeeForm({ departments, onEmployeeCreated }: Props) {
+    const { getToken, isSignedIn } = useAuth();
     const firstNameInput = useFormInput('');
     const lastNameInput = useFormInput('');
     const departmentInput = useFormInput('');
@@ -18,6 +21,12 @@ function EmployeeForm({ departments, onEmployeeCreated }: Props) {
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         setFormError('');
+
+        const sessionToken = await getToken();
+        if (!isSignedIn || !sessionToken) {
+            setFormError('Please log in before creating an employee.');
+            return;
+        }
 
         const firstNameIsValid = firstNameInput.validate(value => {
             if (value.trim().length < 3) {
@@ -34,7 +43,7 @@ function EmployeeForm({ departments, onEmployeeCreated }: Props) {
             firstName: firstNameInput.value,
             lastName: lastNameInput.value,
             departmentName: departmentInput.value
-        });
+        }, sessionToken);
 
         if (!result.success) {
             if (result.errors?.department) {
@@ -54,6 +63,15 @@ function EmployeeForm({ departments, onEmployeeCreated }: Props) {
         departmentInput.reset();
         await onEmployeeCreated();
     };
+
+    if (!isSignedIn) {
+        return (
+            <AuthPrompt
+                title="Add New Employee"
+                message="This form is only available to logged-in users. Sign in to add a new employee entry."
+            />
+        );
+    }
 
     return (
         <section className="employee-form">

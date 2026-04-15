@@ -1,4 +1,6 @@
 import { useOrganizationForm } from '../../hooks/useOrganizationForm';
+import { useAuth } from '@clerk/react';
+import AuthPrompt from '../AuthPrompt/AuthPrompt';
 import './OrganizationForm.css';
 
 interface Props {
@@ -6,6 +8,7 @@ interface Props {
 }
 
 function OrganizationForm({ onRoleCreated }: Props) {
+    const { isSignedIn } = useAuth();
     const {
         firstNameInput,
         lastNameInput,
@@ -13,6 +16,15 @@ function OrganizationForm({ onRoleCreated }: Props) {
         formError,
         handleSubmit
     } = useOrganizationForm({ onRoleCreated });
+
+    if (!isSignedIn) {
+        return (
+            <AuthPrompt
+                title="Add Organization Role"
+                message="Anonymous users can view the organization chart, but you must log in before posting a new role."
+            />
+        );
+    }
 
     return (
         <section className="organization-form">

@@ -1,0 +1,33 @@
+.auth-prompt {
+    max-width: 700px;
+    margin: 2rem auto;
+    padding: 1.25rem 1.5rem;
+    border: 1px solid #d6dbe4;
+    border-radius: 12px;
+    background: #f8fafc;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+.auth-prompt h2 {
+    margin: 0 0 0.5rem;
+    color: #0f172a;
+}
+
+.auth-prompt p {
+    margin: 0 0 1rem;
+    color: #475569;
+}
+
+.auth-prompt__button {
+    padding: 0.7rem 1rem;
+    border: none;
+    border-radius: 8px;
+    background: #0f766e;
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.auth-prompt__button:hover {
+    background: #115e59;
+}

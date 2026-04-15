@@ -18,7 +18,10 @@ async function getEmployees(): Promise<Employee[]> {
     return employeeRepo.getEmployees();
 }
 
-async function createEmployee(input: CreateEmployeeInput): Promise<CreateEmployeeResult> {
+async function createEmployee(
+    input: CreateEmployeeInput,
+    sessionToken: string
+): Promise<CreateEmployeeResult> {
     const firstName = input.firstName.trim();
     const lastName = input.lastName.trim();
     const departmentName = input.departmentName.trim();
@@ -34,7 +37,7 @@ async function createEmployee(input: CreateEmployeeInput): Promise<CreateEmploye
         firstName,
         lastName,
         departmentName
-    });
+    }, sessionToken);
 
     return result;
 }

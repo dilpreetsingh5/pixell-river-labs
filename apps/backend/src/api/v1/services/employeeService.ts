@@ -10,6 +10,10 @@ interface CreateEmployeeResult {
   };
 }
 
+interface CreateEmployeeWithUserInput extends CreateEmployeeInput {
+  createdByUserId?: number;
+}
+
 async function getDepartments(): Promise<string[]> {
   return employeeRepository.getDepartments();
 }
@@ -18,7 +22,7 @@ async function getEmployees(): Promise<Employee[]> {
   return employeeRepository.getEmployees();
 }
 
-async function createEmployee(input: CreateEmployeeInput): Promise<CreateEmployeeResult> {
+async function createEmployee(input: CreateEmployeeWithUserInput): Promise<CreateEmployeeResult> {
   const errors: { firstName?: string; department?: string } = {};
 
   const firstName = input.firstName.trim();
@@ -44,7 +48,8 @@ async function createEmployee(input: CreateEmployeeInput): Promise<CreateEmploye
   const employee = await employeeRepository.createEmployee({
     firstName,
     lastName,
-    departmentName
+    departmentName,
+    createdByUserId: input.createdByUserId
   });
 
   return { success: true, employee };
