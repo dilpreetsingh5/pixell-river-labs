@@ -1,7 +1,7 @@
 import { organizationRepo } from '../repositories/organizationRepo';
 import type { CreateRoleInput, Role } from '../../../../shared/types/Role';
 
-interface CreateRoleResult {
+export interface CreateRoleResult {
     success: boolean;
     roleRecord?: Role;
     errors?: {

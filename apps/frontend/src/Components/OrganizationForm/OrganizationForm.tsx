@@ -3,11 +3,7 @@ import { useAuth } from '@clerk/react';
 import AuthPrompt from '../AuthPrompt/AuthPrompt';
 import './OrganizationForm.css';
 
-interface Props {
-    onRoleCreated: () => Promise<void>;
-}
-
-function OrganizationForm({ onRoleCreated }: Props) {
+function OrganizationForm() {
     const { isSignedIn } = useAuth();
     const {
         firstNameInput,
@@ -15,7 +11,7 @@ function OrganizationForm({ onRoleCreated }: Props) {
         roleInput,
         formError,
         handleSubmit
-    } = useOrganizationForm({ onRoleCreated });
+    } = useOrganizationForm();
 
     if (!isSignedIn) {
         return (

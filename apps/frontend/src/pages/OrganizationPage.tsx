@@ -1,16 +1,19 @@
 import Organization from '../Components/Organization/Organization';
 import OrganizationForm from '../Components/OrganizationForm/OrganizationForm';
-import type { Role } from '../../../../shared/types/Role';
+import { useRolesQuery } from '../queries/organizationQueries';
 
-interface Props {
-    roles: Role[];
-    onRoleCreated: () => Promise<void>;
-}
+function OrganizationPage() {
+    const rolesQuery = useRolesQuery();
 
-function OrganizationPage({ roles, onRoleCreated }: Props) {
+    const roles = rolesQuery.data ?? [];
+    const isLoading = rolesQuery.isLoading;
+    const hasError = Boolean(rolesQuery.error);
+
     return (
         <>
-            <OrganizationForm onRoleCreated={onRoleCreated} />
+            {isLoading && <p>Loading organization...</p>}
+            {!isLoading && hasError && <p className="error">Could not load organization roles.</p>}
+            <OrganizationForm />
             <Organization roles={roles} />
         </>
     );

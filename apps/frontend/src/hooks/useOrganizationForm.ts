@@ -2,18 +2,16 @@ import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { useAuth } from '@clerk/react';
 import { useFormInput } from './userFormInput';
-import { organizationService } from '../services/organizationService';
+import { useCreateRoleMutation } from '../queries/organizationQueries';
 
-interface UseOrganizationFormOptions {
-    onRoleCreated: () => Promise<void>;
-}
-
-export function useOrganizationForm({ onRoleCreated }: UseOrganizationFormOptions) {
+export function useOrganizationForm() {
     const { getToken, isSignedIn } = useAuth();
     const firstNameInput = useFormInput('');
     const lastNameInput = useFormInput('');
     const roleInput = useFormInput('');
     const [formError, setFormError] = useState('');
+
+    const createRoleMutation = useCreateRoleMutation();
 
     async function handleSubmit(event: FormEvent) {
         event.preventDefault();
@@ -36,11 +34,20 @@ export function useOrganizationForm({ onRoleCreated }: UseOrganizationFormOption
             return;
         }
 
-        const result = await organizationService.createRole({
-            firstName: firstNameInput.value,
-            lastName: lastNameInput.value,
-            role: roleInput.value
-        }, sessionToken);
+        let result;
+        try {
+            result = await createRoleMutation.mutateAsync({
+                input: {
+                    firstName: firstNameInput.value,
+                    lastName: lastNameInput.value,
+                    role: roleInput.value
+                },
+                token: sessionToken
+            });
+        } catch {
+            setFormError('Could not create organization role.');
+            return;
+        }
 
         if (!result.success) {
             if (result.errors?.firstName) {
@@ -61,7 +68,6 @@ export function useOrganizationForm({ onRoleCreated }: UseOrganizationFormOption
         firstNameInput.reset();
         lastNameInput.reset();
         roleInput.reset();
-        await onRoleCreated();
     }
 
     return {
