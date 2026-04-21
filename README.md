@@ -63,13 +63,13 @@ npm run dev
 ## Lab 5.2: Data Caching / Server State (TanStack Query)
 
 ### What change I made
-I refactored the front-end so it no longer relies on `useEffect` plus manual “refresh” functions to keep employees, departments, and roles in sync. Instead, the app treats this as server state and uses TanStack Query to fetch the data, cache it, and automatically refresh it when a create action succeeds. This mostly changed the React data flow, not the UI layout.
+I refactored the front-end so it no longer relies on `useEffect` plus manual "refresh" functions to keep employees, departments, and roles in sync. Instead, the app treats this as server state and uses TanStack Query to fetch the data, cache it, and automatically refresh it when a create action succeeds. This mostly changed the React data flow, not the UI layout.
 
 ### Tools used
-I integrated `@tanstack/react-query` into the React app by adding a `QueryClientProvider` at the root and replacing the old fetch-on-mount logic with `useQuery` hooks. For create actions, I used `useMutation` and invalidated the relevant cached queries (`employees`, `departments`, `roles`) so the UI updates from a single source of truth. This removed a lot of “plumbing” code that was previously needed to pass refresh callbacks around.
+I integrated `@tanstack/react-query` into the React app by adding a `QueryClientProvider` at the root and replacing the old fetch-on-mount logic with `useQuery` hooks. For create actions, I used `useMutation` and invalidated the relevant cached queries (`employees`, `departments`, `roles`) so the UI updates from a single source of truth. This removed a lot of "plumbing" code that was previously needed to pass refresh callbacks around.
 
 ### User experience impact
 The app feels more reliable because the UI is now driven by a consistent cache of server data. When a user adds an employee or role, the list refreshes automatically without needing a page reload, and the app avoids extra duplicate requests when navigating around. Loading and error states are also clearer, because the query status is tracked in one place rather than being implied by empty arrays or silent failures.
 
 ### How it changed my understanding
-This change helped me separate “UI state” from “server state”. Employees and departments are not really owned by React components, they are owned by the backend, so using a server-state tool makes the architecture clearer. It also made it easier to reason about when data should be refetched (after mutations, or when data becomes stale) and why “effects for fetching” can become messy as the app grows.
+This change helped me separate "UI state" from "server state". Employees and departments are not really owned by React components, they are owned by the backend, so using a server-state tool makes the architecture clearer. It also made it easier to reason about when data should be refetched (after mutations, or when data becomes stale) and why "effects for fetching" can become messy as the app grows.
