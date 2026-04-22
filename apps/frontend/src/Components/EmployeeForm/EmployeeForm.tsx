@@ -3,20 +3,22 @@ import * as React from 'react';
 import { useAuth } from '@clerk/react';
 import { useFormInput } from '../../hooks/userFormInput';
 import { employeeService} from '../../services/employeeService';
+import { useCreateEmployeeMutation } from '../../queries/employeeQueries';
 import AuthPrompt from '../AuthPrompt/AuthPrompt';
 import './EmployeeForm.css';
 
 interface Props {
     departments: string[];
-    onEmployeeCreated: () => Promise<void>;
 }
 
-function EmployeeForm({ departments, onEmployeeCreated }: Props) {
+function EmployeeForm({ departments }: Props) {
     const { getToken, isSignedIn } = useAuth();
     const firstNameInput = useFormInput('');
     const lastNameInput = useFormInput('');
     const departmentInput = useFormInput('');
     const [formError, setFormError] = useState('');
+
+    const createEmployeeMutation = useCreateEmployeeMutation();
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -39,11 +41,20 @@ function EmployeeForm({ departments, onEmployeeCreated }: Props) {
             return;
         }
 
-        const result = await employeeService.createEmployee({
-            firstName: firstNameInput.value,
-            lastName: lastNameInput.value,
-            departmentName: departmentInput.value
-        }, sessionToken);
+        let result;
+        try {
+            result = await createEmployeeMutation.mutateAsync({
+                input: {
+                    firstName: firstNameInput.value,
+                    lastName: lastNameInput.value,
+                    departmentName: departmentInput.value
+                },
+                token: sessionToken
+            });
+        } catch {
+            setFormError('Could not create employee.');
+            return;
+        }
 
         if (!result.success) {
             if (result.errors?.department) {
@@ -61,7 +72,6 @@ function EmployeeForm({ departments, onEmployeeCreated }: Props) {
         firstNameInput.reset();
         lastNameInput.reset();
         departmentInput.reset();
-        await onEmployeeCreated();
     };
 
     if (!isSignedIn) {

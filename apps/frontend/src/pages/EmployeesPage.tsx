@@ -1,15 +1,17 @@
 import Department from '../Components/Department/Department';
 import EmployeeForm from '../Components/EmployeeForm/EmployeeForm';
 import type { Department as DepartmentType } from '../../../../shared/types/Department';
-import type { Employee } from '../../../../shared/types/Employees';
+import { useDepartmentsQuery, useEmployeesQuery } from '../queries/employeeQueries';
 
-interface Props {
-    departments: string[];
-    employees: Employee[];
-    onEmployeeCreated: () => Promise<void>;
-}
+function EmployeesPage() {
+    const departmentsQuery = useDepartmentsQuery();
+    const employeesQuery = useEmployeesQuery();
 
-function EmployeesPage({ departments, employees, onEmployeeCreated }: Props) {
+    const departments = departmentsQuery.data ?? [];
+    const employees = employeesQuery.data ?? [];
+    const isLoading = departmentsQuery.isLoading || employeesQuery.isLoading;
+    const hasError = Boolean(departmentsQuery.error ?? employeesQuery.error);
+
     const departmentObjects: DepartmentType[] = departments.map(deptName => ({
         name: deptName,
         employees: employees
@@ -19,12 +21,16 @@ function EmployeesPage({ departments, employees, onEmployeeCreated }: Props) {
     return (
         <>
             <main>
+                {isLoading && <p>Loading employees...</p>}
+                {!isLoading && hasError && (
+                    <p className="error">Could not load employees and departments.</p>
+                )}
                 {departmentObjects.map((department, index) => (
                     <Department key={index} department={department} />
                 ))}
             </main>
 
-            <EmployeeForm departments={departments} onEmployeeCreated={onEmployeeCreated} />
+            <EmployeeForm departments={departments} />
         </>
     );
 }

@@ -1,7 +1,7 @@
 import { employeeRepo } from '../repositories/employeeRepo';
 import type { CreateEmployeeInput, Employee } from '../../../../shared/types/Employees';
 
-interface CreateEmployeeResult {
+export interface CreateEmployeeResult {
     success: boolean;
     employee?: Employee;
     errors?: {
